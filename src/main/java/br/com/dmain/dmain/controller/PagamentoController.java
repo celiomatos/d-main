@@ -15,7 +15,7 @@ public class PagamentoController {
 
     @Autowired
     private PagamentoService pagamentoService;
-    
+
     @GetMapping("/custom-pagamento")
     public Date getCustomPagamento() {
         return new Date();
