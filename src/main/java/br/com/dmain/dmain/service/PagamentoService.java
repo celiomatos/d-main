@@ -12,6 +12,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -25,9 +31,22 @@ public class PagamentoService {
         Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "data"));
 
         Specification spec = null;
-        spec = PagamentoSpecs.isNrObPagamento("fdfdf");
-        spec = spec.and(PagamentoSpecs.isNrNlPagamento("NL454545"));
-        spec = spec.and(PagamentoSpecs.isOrgaoId(10));
+
+        List<Long> orgaos = new ArrayList<>();
+        orgaos.add(10L);
+        orgaos.add(20L);
+        spec = PagamentoSpecs.isOrgaos(orgaos);
+
+        List<Long> credores = new ArrayList<>();
+        credores.add(1L);
+        credores.add(5L);
+        spec = spec.and(PagamentoSpecs.isCredores(credores));
+
+        spec = spec.and(PagamentoSpecs.isGreaterData(new Date()));
+        spec = spec.and(PagamentoSpecs.isLessData(new Date()));
+
+        spec = spec.and(PagamentoSpecs.isGreaterValor(new BigDecimal(10)));
+        spec = spec.and(PagamentoSpecs.isLessValor(new BigDecimal(5)));
 
         return pagamentoRepository.findAll(spec, pageable);
     }
