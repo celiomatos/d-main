@@ -14,7 +14,7 @@ public class PagamentoSpecs {
         return (root, query, builder) -> root.join("orgao").get("id").in(ids);
     }
 
-    public static Specification<Pagamento> isFontes(List<Long> ids) {
+    public static Specification<Pagamento> isFontes(List<String> ids) {
         return (root, query, builder) -> root.join("fonte").get("id").in(ids);
     }
 
@@ -26,19 +26,19 @@ public class PagamentoSpecs {
         return (root, query, builder) -> root.join("credor").get("id").in(ids);
     }
 
-    public static Specification<Pagamento> isLessData(Date date) {
+    public static Specification<Pagamento> isDataLess(Date date) {
         return (root, query, builder) -> builder.lessThanOrEqualTo(root.get("data"), date);
     }
 
-    public static Specification<Pagamento> isGreaterData(Date date) {
+    public static Specification<Pagamento> isDataGreater(Date date) {
         return (root, query, builder) -> builder.greaterThanOrEqualTo(root.get("data"), date);
     }
 
-    public static Specification<Pagamento> isLessValor(BigDecimal valor) {
+    public static Specification<Pagamento> isValorLess(BigDecimal valor) {
         return (root, query, builder) -> builder.lessThanOrEqualTo(root.get("valor"), valor);
     }
 
-    public static Specification<Pagamento> isGreaterValor(BigDecimal valor) {
+    public static Specification<Pagamento> isValorGreater(BigDecimal valor) {
         return (root, query, builder) -> builder.greaterThanOrEqualTo(root.get("valor"), valor);
     }
 }

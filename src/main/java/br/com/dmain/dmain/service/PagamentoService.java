@@ -1,8 +1,9 @@
 package br.com.dmain.dmain.service;
 
 import br.com.dmain.dmain.dao.PagamentoRepository;
-import br.com.dmain.dmain.spec.PagamentoSpecs;
+import br.com.dmain.dmain.dto.PagamentoSearchDto;
 import br.com.dmain.dmain.model.Pagamento;
+import br.com.dmain.dmain.spec.PagamentoSpecs;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,12 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 
 @Slf4j
@@ -26,27 +24,49 @@ public class PagamentoService {
     @Autowired
     private PagamentoRepository pagamentoRepository;
 
-    public Page<Pagamento> findAll(int page, int size) {
+    /**
+     * @param pagSearchDto dto.
+     * @param page         page.
+     * @param size         size.
+     * @return payments.
+     */
+    public Page<Pagamento> findAll(PagamentoSearchDto pagSearchDto, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "data"));
 
-        Specification spec = null;
+        Specification<Pagamento> spec = (root, query, builder) -> builder.equal(root.get("removido"), Boolean.FALSE);
 
-        List<Long> orgaos = new ArrayList<>();
-        orgaos.add(10L);
-        orgaos.add(20L);
-        spec = PagamentoSpecs.isOrgaos(orgaos);
+        if (pagSearchDto.getOrgaos() != null && !pagSearchDto.getOrgaos().isEmpty()) {
+            spec = spec.and(PagamentoSpecs.isOrgaos(pagSearchDto.getOrgaos()));
+        }
 
-        List<Long> credores = new ArrayList<>();
-        credores.add(1L);
-        credores.add(5L);
-        spec = spec.and(PagamentoSpecs.isCredores(credores));
+        if (pagSearchDto.getCredores() != null && !pagSearchDto.getCredores().isEmpty()) {
+            spec = spec.and(PagamentoSpecs.isCredores(pagSearchDto.getCredores()));
+        }
 
-        spec = spec.and(PagamentoSpecs.isGreaterData(new Date()));
-        spec = spec.and(PagamentoSpecs.isLessData(new Date()));
+        if (pagSearchDto.getFontes() != null && !pagSearchDto.getFontes().isEmpty()) {
+            spec = spec.and(PagamentoSpecs.isFontes(pagSearchDto.getFontes()));
+        }
 
-        spec = spec.and(PagamentoSpecs.isGreaterValor(new BigDecimal(10)));
-        spec = spec.and(PagamentoSpecs.isLessValor(new BigDecimal(5)));
+        if (pagSearchDto.getClassificacoes() != null && !pagSearchDto.getClassificacoes().isEmpty()) {
+            spec = spec.and(PagamentoSpecs.isClassificacoes(pagSearchDto.getClassificacoes()));
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getDataInicial())) {
+            spec = spec.and(PagamentoSpecs.isDataGreater(pagSearchDto.getDataInicial()));
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getDataInicial())) {
+            spec = spec.and(PagamentoSpecs.isDataLess(pagSearchDto.getDataFinal()));
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getValorInicial())) {
+            spec = spec.and(PagamentoSpecs.isValorGreater(new BigDecimal(pagSearchDto.getValorInicial())));
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getValorFinal())) {
+            spec = spec.and(PagamentoSpecs.isValorLess(new BigDecimal(pagSearchDto.getValorFinal())));
+        }
 
         return pagamentoRepository.findAll(spec, pageable);
     }

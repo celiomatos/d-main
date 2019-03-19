@@ -45,19 +45,19 @@ public class Pagamento implements Serializable {
     private boolean removido;
 
     @JoinColumn(name = "pag_cla_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Classificacao classificacao;
 
     @JoinColumn(name = "pag_cre_id")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Credor credor;
 
     @JoinColumn(name = "pag_fon_id")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Fonte fonte;
 
     @JoinColumn(name = "pag_org_id")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Orgao orgao;
 
 }
