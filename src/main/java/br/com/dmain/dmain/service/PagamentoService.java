@@ -26,13 +26,12 @@ public class PagamentoService {
 
     /**
      * @param pagSearchDto dto.
-     * @param page         page.
-     * @param size         size.
      * @return payments.
      */
-    public Page<Pagamento> findAll(PagamentoSearchDto pagSearchDto, int page, int size) {
+    public Page<Pagamento> findAll(PagamentoSearchDto pagSearchDto) {
 
-        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "data"));
+        Sort sort = new Sort(Sort.Direction.DESC, "data");
+        Pageable pageable = PageRequest.of(pagSearchDto.getPage(), pagSearchDto.getSize(), sort);
 
         Specification<Pagamento> spec = (root, query, builder) -> builder.equal(root.get("removido"), Boolean.FALSE);
 
