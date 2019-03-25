@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 
 @RestController
@@ -20,5 +21,10 @@ public class PagamentoController {
     @PostMapping()
     public Page<Pagamento> findPagamentos(@RequestBody @Valid PagamentoSearchDto pagSearchDto) {
         return pagamentoService.findAll(pagSearchDto);
+    }
+
+    @PostMapping("/sum-pagamento-valor")
+    public BigDecimal sumPagamentoValor(@RequestBody PagamentoSearchDto pagSearchDto) {
+        return pagamentoService.sumPagamentoValor(pagSearchDto);
     }
 }

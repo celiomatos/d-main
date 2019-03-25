@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PagamentoRepository extends JpaRepository<Pagamento, Long>, JpaSpecificationExecutor {
+public interface PagamentoRepository extends JpaRepository<Pagamento, Long>, JpaSpecificationExecutor<Pagamento> {
 
     Page<Pagamento> findAll(Specification spec, Pageable pageable);
 }
