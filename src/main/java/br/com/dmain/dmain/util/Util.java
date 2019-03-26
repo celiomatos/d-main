@@ -2,12 +2,19 @@ package br.com.dmain.dmain.util;
 
 import org.springframework.util.StringUtils;
 
+import java.util.regex.Pattern;
+
 public class Util {
 
     public static String arrayToCommaDelimited(String strArray) {
-        String result = strArray.replace(']', ')').replace('[', '(');
-        result = StringUtils.trimAllWhitespace(result);
+        strArray = StringUtils.trimAllWhitespace(strArray);
+        return strArray.replace(']', ')').replace('[', '(');
+    }
 
-        return result;
+    public static String arrayToStringCommaDelimited(String strArray) {
+        strArray = StringUtils.trimAllWhitespace(strArray);
+        return strArray.replaceAll("]", "')")
+                .replaceAll(",", "','")
+                .replaceAll(Pattern.quote("["), "('");
     }
 }

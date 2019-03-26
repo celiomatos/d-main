@@ -1,7 +1,10 @@
 package br.com.dmain.dmain.service;
 
 import br.com.dmain.dmain.dao.PagamentoRepository;
+import br.com.dmain.dmain.dto.FiveYearsDto;
 import br.com.dmain.dmain.dto.PagamentoSearchDto;
+import br.com.dmain.dmain.dto.TopFiveCredoresDto;
+import br.com.dmain.dmain.dto.TopFiveOrgaosDto;
 import br.com.dmain.dmain.model.Pagamento;
 import br.com.dmain.dmain.spec.PagamentoSpecs;
 import br.com.dmain.dmain.util.Util;
@@ -18,6 +21,9 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Slf4j
@@ -72,18 +78,115 @@ public class PagamentoService {
         if (!StringUtils.isEmpty(pagSearchDto.getValorFinal())) {
             spec = spec.and(PagamentoSpecs.isValorLess(new BigDecimal(pagSearchDto.getValorFinal())));
         }
-        System.out.println(sumPagamentoValor(pagSearchDto));
+
         return pagamentoRepository.findAll(spec, pageable);
     }
 
+    /**
+     * @param pagSearchDto parametros de pesquisa.
+     * @return sum.
+     */
     public BigDecimal sumPagamentoValor(PagamentoSearchDto pagSearchDto) {
-        StringBuilder query = new StringBuilder("select coalesce(sum(t.valor),0) from Pagamento t ");
+        StringBuilder query = new StringBuilder();
+        query.append("select coalesce(sum(t.valor),0) from Pagamento t where t.removido = false ");
+
         if (pagSearchDto.getOrgaos() != null && !pagSearchDto.getOrgaos().isEmpty()) {
-            String orgaos = Util.arrayToCommaDelimited(pagSearchDto.getOrgaos().toString());
-            query.append("where t.orgao.id in");
-            query.append(orgaos);
+            String orgao = Util.arrayToCommaDelimited(pagSearchDto.getOrgaos().toString());
+
+            query.append("and t.orgao.id in");
+            query.append(orgao);
         }
+
+        if (pagSearchDto.getCredores() != null && !pagSearchDto.getCredores().isEmpty()) {
+            String credor = Util.arrayToCommaDelimited(pagSearchDto.getCredores().toString());
+
+            query.append(" and t.credor.id in");
+            query.append(credor);
+        }
+
+        if (pagSearchDto.getFontes() != null && !pagSearchDto.getFontes().isEmpty()) {
+            String fonte = Util.arrayToStringCommaDelimited(pagSearchDto.getFontes().toString());
+
+            query.append(" and t.fonte.id in");
+            query.append(fonte);
+        }
+
+        if (pagSearchDto.getClassificacoes() != null && !pagSearchDto.getClassificacoes().isEmpty()) {
+            String classificacao = Util.arrayToCommaDelimited(pagSearchDto.getClassificacoes().toString());
+
+            query.append(" and t.classificacao.id in");
+            query.append(classificacao);
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getDataInicial())) {
+            query.append(" and t.data >= '");
+            query.append(pagSearchDto.getDataInicial());
+            query.append("'");
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getDataFinal())) {
+            query.append(" and t.data <= '");
+            query.append(pagSearchDto.getDataFinal());
+            query.append("'");
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getValorInicial())) {
+            query.append(" and t.valor >= ");
+            query.append(pagSearchDto.getValorInicial());
+        }
+
+        if (!StringUtils.isEmpty(pagSearchDto.getValorFinal())) {
+            query.append(" and t.valor <= ");
+            query.append(pagSearchDto.getValorFinal());
+        }
+
         return (BigDecimal) em.createQuery(query.toString()).getSingleResult();
+    }
+
+    /**
+     * @return five years.
+     */
+    public List<FiveYearsDto> fiveYearsPagagmentos() {
+        List<Object[]> result = pagamentoRepository.findFiveYearsPagagmentos(new java.sql.Date(1546214400000L));
+        List<FiveYearsDto> fiveYears = new ArrayList<>();
+        for (Object[] obj : result) {
+            fiveYears.add(new FiveYearsDto(obj[0].toString(), new BigDecimal(obj[1].toString())));
+        }
+        return fiveYears;
+    }
+
+    /**
+     *
+     * @param dateInicial initial date.
+     * @param dateFinal final date.
+     * @return top five.
+     */
+    public List<TopFiveCredoresDto> topFiveCredores(Date dateInicial, Date dateFinal) {
+        List<Object[]> result = pagamentoRepository.findTopFiveCredores(
+                new java.sql.Date(dateInicial.getTime()), new java.sql.Date(dateFinal.getTime()));
+
+        List<TopFiveCredoresDto> fiveCredores = new ArrayList<>();
+        for (Object[] obj : result) {
+            fiveCredores.add(new TopFiveCredoresDto(obj[0].toString(), new BigDecimal(obj[1].toString())));
+        }
+        return fiveCredores;
+    }
+
+    /**
+     *
+     * @param dateInicial initial date.
+     * @param dateFinal final date.
+     * @return top five.
+     */
+    public List<TopFiveOrgaosDto> topFiveOrgaos(Date dateInicial, Date dateFinal) {
+        List<Object[]> result = pagamentoRepository.findTopFiveOrgaos(
+                new java.sql.Date(dateInicial.getTime()), new java.sql.Date(dateFinal.getTime()));
+
+        List<TopFiveOrgaosDto> fiveOrgaos = new ArrayList<>();
+        for (Object[] obj : result) {
+            fiveOrgaos.add(new TopFiveOrgaosDto(obj[0].toString(), obj[1].toString(), new BigDecimal(obj[2].toString())));
+        }
+        return fiveOrgaos;
     }
 
 }
