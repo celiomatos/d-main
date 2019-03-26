@@ -39,12 +39,12 @@ public class PagamentoController {
     }
 
     @GetMapping("/top-five-credores")
-    public List<TopFiveCredoresDto> topFiveCredores(@RequestParam Date dateInicial, @RequestParam Date dateFinal) {
+    public List<TopFiveCredoresDto> topFiveCredores(@RequestParam String dateInicial, @RequestParam String dateFinal) {
         return pagamentoService.topFiveCredores(dateInicial, dateFinal);
     }
 
     @GetMapping("/top-five-orgaos")
-    public List<TopFiveOrgaosDto> topFiveOrgaos(@RequestParam Date dateInicial, @RequestParam Date dateFinal) {
+    public List<TopFiveOrgaosDto> topFiveOrgaos(@RequestParam String dateInicial, @RequestParam String dateFinal) {
         return pagamentoService.topFiveOrgaos(dateInicial, dateFinal);
     }
 }

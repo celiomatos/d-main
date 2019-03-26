@@ -22,7 +22,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -156,14 +155,13 @@ public class PagamentoService {
     }
 
     /**
-     *
      * @param dateInicial initial date.
-     * @param dateFinal final date.
+     * @param dateFinal   final date.
      * @return top five.
      */
-    public List<TopFiveCredoresDto> topFiveCredores(Date dateInicial, Date dateFinal) {
+    public List<TopFiveCredoresDto> topFiveCredores(String dateInicial, String dateFinal) {
         List<Object[]> result = pagamentoRepository.findTopFiveCredores(
-                new java.sql.Date(dateInicial.getTime()), new java.sql.Date(dateFinal.getTime()));
+                new java.sql.Date(Long.parseLong(dateInicial)), new java.sql.Date(Long.parseLong(dateFinal)));
 
         List<TopFiveCredoresDto> fiveCredores = new ArrayList<>();
         for (Object[] obj : result) {
@@ -173,14 +171,13 @@ public class PagamentoService {
     }
 
     /**
-     *
      * @param dateInicial initial date.
-     * @param dateFinal final date.
+     * @param dateFinal   final date.
      * @return top five.
      */
-    public List<TopFiveOrgaosDto> topFiveOrgaos(Date dateInicial, Date dateFinal) {
+    public List<TopFiveOrgaosDto> topFiveOrgaos(String dateInicial, String dateFinal) {
         List<Object[]> result = pagamentoRepository.findTopFiveOrgaos(
-                new java.sql.Date(dateInicial.getTime()), new java.sql.Date(dateFinal.getTime()));
+                new java.sql.Date(Long.parseLong(dateInicial)), new java.sql.Date(Long.parseLong(dateFinal)));
 
         List<TopFiveOrgaosDto> fiveOrgaos = new ArrayList<>();
         for (Object[] obj : result) {
