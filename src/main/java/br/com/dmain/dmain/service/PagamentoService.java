@@ -181,7 +181,10 @@ public class PagamentoService {
 
         List<TopFiveOrgaosDto> fiveOrgaos = new ArrayList<>();
         for (Object[] obj : result) {
-            fiveOrgaos.add(new TopFiveOrgaosDto(obj[0].toString(), obj[1].toString(), new BigDecimal(obj[2].toString())));
+            fiveOrgaos.add(new TopFiveOrgaosDto(
+                    obj[0] != null ? obj[0].toString():"ORGAO-0001",
+                    obj[1]!= null ? obj[1].toString():"X",
+                    new BigDecimal(obj[2].toString())));
         }
         return fiveOrgaos;
     }
