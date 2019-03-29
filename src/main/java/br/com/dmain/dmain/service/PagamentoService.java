@@ -3,8 +3,6 @@ package br.com.dmain.dmain.service;
 import br.com.dmain.dmain.dao.PagamentoRepository;
 import br.com.dmain.dmain.dto.FiveYearsDto;
 import br.com.dmain.dmain.dto.PagamentoSearchDto;
-import br.com.dmain.dmain.dto.TopFiveCredoresDto;
-import br.com.dmain.dmain.dto.TopFiveOrgaosDto;
 import br.com.dmain.dmain.model.Pagamento;
 import br.com.dmain.dmain.spec.PagamentoSpecs;
 import br.com.dmain.dmain.util.Util;
@@ -152,41 +150,6 @@ public class PagamentoService {
             fiveYears.add(new FiveYearsDto(obj[0].toString(), new BigDecimal(obj[1].toString())));
         }
         return fiveYears;
-    }
-
-    /**
-     * @param dateInicial initial date.
-     * @param dateFinal   final date.
-     * @return top five.
-     */
-    public List<TopFiveCredoresDto> topFiveCredores(String dateInicial, String dateFinal) {
-        List<Object[]> result = pagamentoRepository.findTopFiveCredores(
-                new java.sql.Date(Long.parseLong(dateInicial)), new java.sql.Date(Long.parseLong(dateFinal)));
-
-        List<TopFiveCredoresDto> fiveCredores = new ArrayList<>();
-        for (Object[] obj : result) {
-            fiveCredores.add(new TopFiveCredoresDto(obj[0].toString(), new BigDecimal(obj[1].toString())));
-        }
-        return fiveCredores;
-    }
-
-    /**
-     * @param dateInicial initial date.
-     * @param dateFinal   final date.
-     * @return top five.
-     */
-    public List<TopFiveOrgaosDto> topFiveOrgaos(String dateInicial, String dateFinal) {
-        List<Object[]> result = pagamentoRepository.findTopFiveOrgaos(
-                new java.sql.Date(Long.parseLong(dateInicial)), new java.sql.Date(Long.parseLong(dateFinal)));
-
-        List<TopFiveOrgaosDto> fiveOrgaos = new ArrayList<>();
-        for (Object[] obj : result) {
-            fiveOrgaos.add(new TopFiveOrgaosDto(
-                    obj[0] != null ? obj[0].toString():"ORGAO-0001",
-                    obj[1]!= null ? obj[1].toString():"X",
-                    new BigDecimal(obj[2].toString())));
-        }
-        return fiveOrgaos;
     }
 
 }
