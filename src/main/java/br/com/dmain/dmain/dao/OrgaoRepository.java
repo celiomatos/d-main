@@ -1,6 +1,8 @@
 package br.com.dmain.dmain.dao;
 
 import br.com.dmain.dmain.model.Orgao;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +19,6 @@ public interface OrgaoRepository extends JpaRepository<Orgao, Long> {
             "WHERE pag_removido = false AND pag.pag_date >= ?1 AND pag.pag_date <= ?2 " +
             "GROUP BY sigla, orgao ORDER BY valor DESC LIMIT 5", nativeQuery = true)
     List<Object[]> findTopFiveOrgaos(java.sql.Date dateInicial, java.sql.Date dateFinal);
+
+    Page<Orgao> findByNomeContainingOrderByNomeAsc(String nome, Pageable pageable);
 }

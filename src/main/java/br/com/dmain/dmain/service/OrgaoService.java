@@ -45,4 +45,14 @@ public class OrgaoService {
     public Page<Orgao> findAll(Pageable pageable) {
         return orgaoRepository.findAll(pageable);
     }
+
+    /**
+     * @param nome
+     * @param pageable
+     * @return
+     */
+    public Page<Orgao> findByNome(String nome, Pageable pageable) {
+        nome = nome.trim().toUpperCase();
+        return orgaoRepository.findByNomeContainingOrderByNomeAsc(nome, pageable);
+    }
 }
