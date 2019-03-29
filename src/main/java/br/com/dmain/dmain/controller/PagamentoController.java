@@ -20,7 +20,7 @@ public class PagamentoController {
     @Autowired
     private PagamentoService pagamentoService;
 
-    @PostMapping("/find-all")
+    @PostMapping("/search")
     public Page<Pagamento> findPagamentos(@RequestBody @Valid PagamentoSearchDto pagSearchDto) {
         return pagamentoService.findAll(pagSearchDto);
     }
