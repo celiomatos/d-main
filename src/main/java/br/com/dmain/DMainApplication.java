@@ -13,9 +13,9 @@ public class DMainApplication extends SpringBootServletInitializer {
         return application.sources(DMainApplication.class);
     }
 
-
     public static void main(String[] args) {
         SpringApplication.run(DMainApplication.class, args);
     }
+
 
 }

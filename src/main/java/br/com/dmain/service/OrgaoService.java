@@ -32,7 +32,7 @@ public class OrgaoService {
         List<TopFiveOrgaosDto> fiveOrgaos = new ArrayList<>();
         for (Object[] obj : result) {
             fiveOrgaos.add(new TopFiveOrgaosDto(
-                    obj[0] != null ? obj[0].toString() : "ORGAO-0001",
+                    obj[0] != null ? obj[0].toString() : "ORGAO0001",
                     obj[1] != null ? obj[1].toString() : "X",
                     new BigDecimal(obj[2].toString())));
         }
