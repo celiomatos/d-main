@@ -23,6 +23,14 @@ public class CredorController {
         return credorService.topFive(dateInicial, dateFinal);
     }
 
+    @GetMapping("/find-all")
+    public Page<Credor> findAll(@RequestParam Integer page, @RequestParam Integer count,
+                                @RequestParam String order, @RequestParam String sortProperty) {
+        Sort.Direction direction = (order == null || order.equalsIgnoreCase("ASC"))
+                ? Sort.Direction.ASC : Sort.Direction.DESC;
+        return credorService.findAll(PageRequest.of(page, count, new Sort(direction, sortProperty)));
+    }
+
     @GetMapping("/find-by-nome/{nome}")
     public Page<Credor> findByName(@PathVariable String nome, @RequestParam Integer page, @RequestParam Integer count,
                                    @RequestParam String order, @RequestParam String sortProperty) {

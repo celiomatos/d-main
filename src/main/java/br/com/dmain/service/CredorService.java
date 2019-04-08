@@ -37,6 +37,14 @@ public class CredorService {
     }
 
     /**
+     * @param pageable
+     * @return
+     */
+    public Page<Credor> findAll(Pageable pageable) {
+        return credorRepository.findAll(pageable);
+    }
+
+    /**
      * @param nome
      * @param pageable
      * @return
