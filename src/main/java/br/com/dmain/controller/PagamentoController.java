@@ -56,7 +56,7 @@ public class PagamentoController {
                                        @RequestBody PagamentoSearchDto pagSearchDto) throws IOException {
         System.out.println(">>>>>>>>>>><<<<<<<<<<<< :::: "+pagSearchDto.getOrgaos());
 
-        InputStream myStream = excelGeneratorService.pagamentosToExcell();
+        InputStream myStream = excelGeneratorService.pagamentosToExcell(pagSearchDto);
 
         // xls file
         response.addHeader("Content-disposition", "attachment;filename=sample.xlsx");

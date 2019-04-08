@@ -1,10 +1,14 @@
 package br.com.dmain.service;
 
+import br.com.dmain.dto.PagamentoSearchDto;
+import br.com.dmain.model.Pagamento;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +19,19 @@ import java.io.IOException;
 @Service
 public class ExcelGeneratorService {
 
-    public ByteArrayInputStream pagamentosToExcell() throws IOException {
+    @Autowired
+    private PagamentoService pagamentoService;
+
+    public ByteArrayInputStream pagamentosToExcell(PagamentoSearchDto pagSearchDto) throws IOException {
+
+        Page<Pagamento> pagamentos = pagamentoService.findAll(pagSearchDto);
+        if (pagamentos.isEmpty()) {
+            throw new IOException("");
+        } else {
+            do {
+                pagamentos = pagamentoService.findAll(pagSearchDto);
+            } while (pagamentos.isEmpty());
+        }
 
         String[] COLUMNs = {"Id", "Name", "Address", "Age"};
         try (XSSFWorkbook workbook = new XSSFWorkbook();
@@ -43,6 +59,7 @@ public class ExcelGeneratorService {
 
             CellStyle headerCellStyle = workbook.createCellStyle();
             headerCellStyle.setFont(headerFont);
+
 
             // Row for Header
             Row headerRow = sheet.createRow(0);
