@@ -64,7 +64,7 @@ public class PagamentoService {
             spec = spec.and(PagamentoSpecs.isDataGreater(pagSearchDto.getDataInicial()));
         }
 
-        if (!StringUtils.isEmpty(pagSearchDto.getDataInicial())) {
+        if (!StringUtils.isEmpty(pagSearchDto.getDataFinal())) {
             spec = spec.and(PagamentoSpecs.isDataLess(pagSearchDto.getDataFinal()));
         }
 
