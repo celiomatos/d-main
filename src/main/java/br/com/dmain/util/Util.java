@@ -1,9 +1,12 @@
 package br.com.dmain.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class Util {
 
     public static String arrayToCommaDelimited(String strArray) {
@@ -16,5 +19,24 @@ public class Util {
         return strArray.replaceAll("]", "')")
                 .replaceAll(",", "','")
                 .replaceAll(Pattern.quote("["), "('");
+    }
+
+    public static BigDecimal strToBigDecimal(String vl) {
+        BigDecimal value = null;
+        if (vl != null && (!vl.isEmpty())) {
+            try {
+                vl = vl.replaceAll("[R$, .]", "");
+                if (vl.length() > 2) {
+                    vl = vl.substring(0, vl.length() - 2)
+                            + "."
+                            + vl.substring(vl.length() - 2);
+
+                    value = new BigDecimal(vl);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+        return value;
     }
 }
