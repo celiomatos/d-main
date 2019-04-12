@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -46,7 +47,7 @@ public class ExcelGeneratorService {
             try (XSSFWorkbook workbook = new XSSFWorkbook();
                  ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-                XSSFSheet sheet = workbook.createSheet("Customers");
+                XSSFSheet sheet = workbook.createSheet("Pagamentos");
 
                 sheet.setMargin(XSSFSheet.RightMargin, 0.4);
                 sheet.setMargin(XSSFSheet.LeftMargin, 0.4);
@@ -74,249 +75,254 @@ public class ExcelGeneratorService {
                 String valueGroupOne = "";
                 String valueGroupTwo = "";
 
-                Double totalG1 = new Double(0);
-                Double totalG2 = new Double(0);
-                Double totalGeral = new Double(0);
+                Double totalG1 = 0.0;
+                Double totalG2 = 0.0;
+                Double totalGeral = 0.0;
 
                 int rowValorOne = 0;
                 int rowValorTwo = 0;
 
                 int odd = 0;
-                int i = 0;
+                int count = 1;
 
                 do {
+                    List<Pagamento> pagamento = pagamentos.getContent();
+                    for (int i = 0; i < pagamento.size(); i++) {
 
-                    odd++;
-                    boolean isCreateRow = false;
+                        odd++;
 
-                    String chaveGrupo1 = valueGroup(grupo1, lst.get(i));
+                        boolean isCreateRow = false;
 
-                    if (!valueGroupOne.equalsIgnoreCase(chaveGrupo1)) {
+                        String chaveGrupo1 = pagamento.get(i).getOrgao().getCodigo() + " - " + pagamento.get(i).getOrgao().getNome();
 
-                        if (i > 0) {
+                        if (!valueGroupOne.equalsIgnoreCase(chaveGrupo1)) {
+
+                            if (count > 1) {
+                                cell = sheet.getRow(rowValorOne).createCell(6);
+                                cell.setCellValue(totalG1);
+                                cell.setCellStyle(styleGroupOne);
+
+                                totalG1 = 0D;
+                                sheet.createRow(rowAtual++);
+                                sheet.createRow(rowAtual++);
+                                isCreateRow = true;
+                            }
+
+                            valueGroupOne = chaveGrupo1;
+
+                            rowValorOne = rowAtual;
+
+                            row = sheet.createRow(rowAtual++);
+                            cellAtual = 0;
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue(grupo1);
+                            cell.setCellStyle(styleGroupOne);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue(valueGroupOne);
+                            cell.setCellStyle(styleGroupOne);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupOne);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupOne);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupOne);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupOne);
+
+                            sheet.addMergedRegion(new CellRangeAddress(rowAtual - 1, rowAtual - 1, 1, 5));
+                            sheet.createRow(rowAtual++);
+                        }
+
+                        StringBuilder chaveGrupo2 = new StringBuilder();
+                        chaveGrupo2.append(chaveGrupo1);
+                        String valueGroupTwoAux = pagamento.get(i).getCredor().getNome();
+                        chaveGrupo2.append(valueGroupTwoAux);
+
+                        if (!valueGroupTwo.equalsIgnoreCase(chaveGrupo2.toString())) {
+                            odd = 1;
+                            if (i > 0) {
+                                cell = sheet.getRow(rowValorTwo).createCell(6);
+                                cell.setCellValue(totalG2);
+                                cell.setCellStyle(styleGroupTwo);
+
+                                totalG2 = 0D;
+
+                                if (!isCreateRow) {
+                                    sheet.createRow(rowAtual++);
+                                }
+                            }
+                            rowValorTwo = rowAtual;
+
+                            valueGroupTwo = chaveGrupo2.toString();
+
+                            row = sheet.createRow(rowAtual++);
+                            cellAtual = 0;
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue(grupo2);
+                            cell.setCellStyle(styleGroupTwo);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue(valueGroupTwoAux);
+                            cell.setCellStyle(styleGroupTwo);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupTwo);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupTwo);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupTwo);
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellStyle(styleGroupTwo);
+
+                            sheet.addMergedRegion(new CellRangeAddress(rowAtual - 1, rowAtual - 1, 1, 5));
+
+                            row = sheet.createRow(rowAtual++);
+                            cellAtual = 0;
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue("Data");
+                            cell.setCellStyle(styleHeaderBlack);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue("OB");
+                            cell.setCellStyle(styleHeaderBlack);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue("NL");
+                            cell.setCellStyle(styleHeaderBlack);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue("NE");
+                            cell.setCellStyle(styleHeaderBlack);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue("Fonte");
+                            cell.setCellStyle(styleHeaderBlack);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue("Classificação");
+                            cell.setCellStyle(styleHeaderBlack);
+
+                            cell = row.createCell(cellAtual++);
+                            cell.setCellValue("Valor");
+                            cell.setCellStyle(styleHeaderBlack);
+
+                        }
+
+                        row = sheet.createRow(rowAtual++);
+                        cellAtual = 0;
+                        cell = row.createCell(cellAtual++);
+                        cell.setCellValue(pagamento.get(i).getData().toString());
+                        if (odd % 2 == 0) {
+                            cell.setCellStyle(styleDefaultOdd);
+                        } else {
+                            cell.setCellStyle(styleDefault);
+                        }
+                        cell = row.createCell(cellAtual++);
+                        //nr_ob
+                        if (pagamento.get(i).getNrOb() != null && pagamento.get(i).getNrOb().length() > 7) {
+                            cell.setCellValue(pagamento.get(i).getNrOb().substring(6));
+                        } else {
+                            cell.setCellValue("-");
+                        }
+
+                        if (odd % 2 == 0) {
+                            cell.setCellStyle(styleDefaultOdd);
+                        } else {
+                            cell.setCellStyle(styleDefault);
+                        }
+
+                        cell = row.createCell(cellAtual++);
+                        if (pagamento.get(i).getNrNl() != null && pagamento.get(i).getNrNl().length() > 7) {
+                            cell.setCellValue(pagamento.get(i).getNrNl().substring(6));
+                        } else {
+                            cell.setCellValue("-");
+                        }
+                        if (odd % 2 == 0) {
+                            cell.setCellStyle(styleDefaultOdd);
+                        } else {
+                            cell.setCellStyle(styleDefault);
+                        }
+                        cell = row.createCell(cellAtual++);
+                        if (pagamento.get(i).getNrNe() != null && pagamento.get(i).getNrNe().length() > 7) {
+                            cell.setCellValue(pagamento.get(i).getNrNe().substring(6));
+                        } else {
+                            cell.setCellValue("-");
+                        }
+                        if (odd % 2 == 0) {
+                            cell.setCellStyle(styleDefaultOdd);
+                        } else {
+                            cell.setCellStyle(styleDefault);
+                        }
+                        cell = row.createCell(cellAtual++);
+                        cell.setCellValue(
+                                pagamento.get(i).getFonte().getId() + "-"
+                                        + pagamento.get(i).getFonte().getNome());
+                        if (odd % 2 == 0) {
+                            cell.setCellStyle(styleDefaultOdd);
+                        } else {
+                            cell.setCellStyle(styleDefault);
+                        }
+                        cell = row.createCell(cellAtual++);
+                        cell.setCellValue(pagamento.get(i).getClassificacao().getNome());
+                        if (odd % 2 == 0) {
+                            cell.setCellStyle(styleDefaultOdd);
+                        } else {
+                            cell.setCellStyle(styleDefault);
+                        }
+
+                        cell = row.createCell(cellAtual++);
+                        Double valor = Util.strToBigDecimal(pagamento.get(i).getValor().toString()).doubleValue();
+                        cell.setCellValue(valor);
+                        if (odd % 2 == 0) {
+                            cell.setCellStyle(styleDefaultOdd);
+                        } else {
+                            cell.setCellStyle(styleDefault);
+                        }
+
+                        cell.getRow().setHeight((short) -1);
+
+                        totalG1 += valor;
+                        totalG2 += valor;
+                        totalGeral += valor;
+
+                        if (count == pagamentos.getTotalElements()) {
                             cell = sheet.getRow(rowValorOne).createCell(6);
                             cell.setCellValue(totalG1);
                             cell.setCellStyle(styleGroupOne);
 
-                            totalG1 = 0D;
-                            sheet.createRow(rowAtual++);
-                            sheet.createRow(rowAtual++);
-                            isCreateRow = true;
-                        }
-
-                        valueGroupOne = chaveGrupo1;
-
-                        rowValorOne = rowAtual;
-
-                        row = sheet.createRow(rowAtual++);
-                        cellAtual = 0;
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue(grupo1);
-                        cell.setCellStyle(styleGroupOne);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue(valueGroupOne);
-                        cell.setCellStyle(styleGroupOne);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupOne);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupOne);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupOne);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupOne);
-
-                        sheet.addMergedRegion(new CellRangeAddress(rowAtual - 1, rowAtual - 1, 1, 5));
-                        sheet.createRow(rowAtual++);
-                    }
-
-                    StringBuilder chaveGrupo2 = new StringBuilder();
-                    chaveGrupo2.append(chaveGrupo1);
-                    String valueGroupTwoAux = valueGroup(grupo2, lst.get(i));
-                    chaveGrupo2.append(valueGroupTwoAux);
-
-                    if (!valueGroupTwo.equalsIgnoreCase(chaveGrupo2.toString())) {
-                        odd = 1;
-                        if (i > 0) {
                             cell = sheet.getRow(rowValorTwo).createCell(6);
                             cell.setCellValue(totalG2);
                             cell.setCellStyle(styleGroupTwo);
 
-                            totalG2 = 0D;
+                            row = sheet.createRow(4);
+                            cell = row.createCell(0);
+                            cell.setCellValue("Total Geral");
+                            cell.setCellStyle(styleDefaultOdd);
 
-                            if (!isCreateRow) {
-                                sheet.createRow(rowAtual++);
-                            }
+                            cell = row.createCell(1);
+                            cell.setCellValue(totalGeral);
+                            cell.setCellStyle(styleDefaultOdd);
+
+                            cell = row.createCell(2);
+                            cell.setCellStyle(styleDefaultOdd);
+                            sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, 4));
+
+                            row = sheet.createRow(0);
+                            cell = row.createCell(0);
+                            cell.setCellValue("Relação de pagamentos");
+
+                            createHead(pagSearchDto, sheet);
                         }
-                        rowValorTwo = rowAtual;
 
-                        valueGroupTwo = chaveGrupo2.toString();
-
-                        row = sheet.createRow(rowAtual++);
-                        cellAtual = 0;
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue(grupo2);
-                        cell.setCellStyle(styleGroupTwo);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue(valueGroupTwoAux);
-                        cell.setCellStyle(styleGroupTwo);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupTwo);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupTwo);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupTwo);
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellStyle(styleGroupTwo);
-
-                        sheet.addMergedRegion(new CellRangeAddress(rowAtual - 1, rowAtual - 1, 1, 5));
-
-                        row = sheet.createRow(rowAtual++);
-                        cellAtual = 0;
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue("Data");
-                        cell.setCellStyle(styleHeaderBlack);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue("OB");
-                        cell.setCellStyle(styleHeaderBlack);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue("NL");
-                        cell.setCellStyle(styleHeaderBlack);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue("NE");
-                        cell.setCellStyle(styleHeaderBlack);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue("Fonte");
-                        cell.setCellStyle(styleHeaderBlack);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue("Classificação");
-                        cell.setCellStyle(styleHeaderBlack);
-
-                        cell = row.createCell(cellAtual++);
-                        cell.setCellValue("Valor");
-                        cell.setCellStyle(styleHeaderBlack);
-
+                        if (pagamentos.isLast()) {
+                            isLast = true;
+                        } else {
+                            pagSearchDto.setPage(pagSearchDto.getPage() + 1);
+                            pagamentos = pagamentoService.findAll(pagSearchDto);
+                        }
                     }
-
-                    row = sheet.createRow(rowAtual++);
-                    cellAtual = 0;
-                    cell = row.createCell(cellAtual++);
-                    cell.setCellValue(lst.get(i)[4].toString());
-                    if (odd % 2 == 0) {
-                        cell.setCellStyle(styleDefaultOdd);
-                    } else {
-                        cell.setCellStyle(styleDefault);
-                    }
-                    cell = row.createCell(cellAtual++);
-                    //nr_ob
-                    if (lst.get(i)[5] != null && lst.get(i)[5].toString().length() > 7) {
-                        cell.setCellValue(lst.get(i)[5].toString().substring(6));
-                    } else {
-                        cell.setCellValue("-");
-                    }
-
-                    if (odd % 2 == 0) {
-                        cell.setCellStyle(styleDefaultOdd);
-                    } else {
-                        cell.setCellStyle(styleDefault);
-                    }
-
-                    cell = row.createCell(cellAtual++);
-                    if (lst.get(i)[6] != null && lst.get(i)[6].toString().length() > 7) {
-                        cell.setCellValue(lst.get(i)[6].toString().substring(6));
-                    } else {
-                        cell.setCellValue("-");
-                    }
-                    if (odd % 2 == 0) {
-                        cell.setCellStyle(styleDefaultOdd);
-                    } else {
-                        cell.setCellStyle(styleDefault);
-                    }
-                    cell = row.createCell(cellAtual++);
-                    if (lst.get(i)[7] != null && lst.get(i)[7].toString().length() > 7) {
-                        cell.setCellValue(lst.get(i)[7].toString().substring(6));
-                    } else {
-                        cell.setCellValue("-");
-                    }
-                    if (odd % 2 == 0) {
-                        cell.setCellStyle(styleDefaultOdd);
-                    } else {
-                        cell.setCellStyle(styleDefault);
-                    }
-                    cell = row.createCell(cellAtual++);
-                    cell.setCellValue(lst.get(i)[8].toString()
-                            + "-" + lst.get(i)[9]);
-                    if (odd % 2 == 0) {
-                        cell.setCellStyle(styleDefaultOdd);
-                    } else {
-                        cell.setCellStyle(styleDefault);
-                    }
-                    cell = row.createCell(cellAtual++);
-                    cell.setCellValue(lst.get(i)[10].toString());
-                    if (odd % 2 == 0) {
-                        cell.setCellStyle(styleDefaultOdd);
-                    } else {
-                        cell.setCellStyle(styleDefault);
-                    }
-
-                    cell = row.createCell(cellAtual++);
-                    Double valor = Util.strToBigDecimal(lst.get(i)[2].toString()).doubleValue();
-                    cell.setCellValue(valor);
-                    if (odd % 2 == 0) {
-                        cell.setCellStyle(styleDefaultOdd);
-                    } else {
-                        cell.setCellStyle(styleDefault);
-                    }
-
-                    cell.getRow().setHeight((short) -1);
-
-                    totalG1 += valor;
-                    totalG2 += valor;
-                    totalGeral += valor;
-
-                    if (i == lst.size() - 1) {
-                        cell = sheet.getRow(rowValorOne).createCell(6);
-                        cell.setCellValue(totalG1);
-                        cell.setCellStyle(styleGroupOne);
-
-                        cell = sheet.getRow(rowValorTwo).createCell(6);
-                        cell.setCellValue(totalG2);
-                        cell.setCellStyle(styleGroupTwo);
-
-                        row = sheet.createRow(4);
-                        cell = row.createCell(0);
-                        cell.setCellValue("Total Geral");
-                        cell.setCellStyle(styleDefaultOdd);
-
-                        cell = row.createCell(1);
-                        cell.setCellValue(totalGeral);
-                        cell.setCellStyle(styleDefaultOdd);
-
-                        cell = row.createCell(2);
-                        cell.setCellStyle(styleDefaultOdd);
-                        sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, 4));
-
-                        row = sheet.createRow(0);
-                        cell = row.createCell(0);
-                        cell.setCellValue("Relação de pagamentos");
-
-                        createHead(b, sheet);
-                    }
-
-                    if (pagamentos.isLast()) {
-                        isLast = true;
-                    } else {
-                        pagSearchDto.setPage(pagSearchDto.getPage() + 1);
-                        pagamentos = pagamentoService.findAll(pagSearchDto);
-                    }
-                    i++;
+                    count++;
                 } while (isLast);
 
                 sheet.setColumnWidth(0, 2500);
@@ -343,26 +349,24 @@ public class ExcelGeneratorService {
         }
     }
 
-    private void createHead(PagamentoBean b, XSSFSheet sheet) {
+    private void createHead(PagamentoSearchDto pagSearchDto, XSSFSheet sheet) {
 
         StringBuilder vl = new StringBuilder("Valores ");
         String e = "";
 
-        if (b.getValorInicial() != null && !b.getValorInicial().isEmpty()) {
+        if (pagSearchDto.getValorInicial() != null && !pagSearchDto.getValorInicial().isEmpty()) {
             vl.append("acima de ");
-            vl.append(b.getValorInicial());
+            vl.append(pagSearchDto.getValorInicial());
             e = " e ";
         }
-        if (b.getValorFinal() != null && !b.getValorFinal().isEmpty()) {
+        if (pagSearchDto.getValorFinal() != null && !pagSearchDto.getValorFinal().isEmpty()) {
             vl.append(e);
             vl.append("abaixo de ");
-            vl.append(b.getValorFinal());
+            vl.append(pagSearchDto.getValorFinal());
         }
         int r = 3;
         int c = 4;
-        if (!b.getTipoConsulta().equalsIgnoreCase("a")) {
-            c = 1;
-        }
+
         if (vl.length() > 10) {
             XSSFRow row = sheet.createRow(r);
             XSSFCell cell = row.createCell(0);
@@ -371,15 +375,16 @@ public class ExcelGeneratorService {
             sheet.addMergedRegion(new CellRangeAddress(r, r, 0, c));
             r = 2;
         }
+
         StringBuilder pe = new StringBuilder("Período");
-        if (b.getDtInicial() != null && b.getDtInicial().length() > 0) {
+        if (pagSearchDto.getDataInicial() != null && pagSearchDto.getDataInicial().toString().length() > 0) {
             pe.append(" de ");
-            pe.append(b.getDtInicial());
+            pe.append(pagSearchDto.getDataInicial());
 
         }
-        if (b.getDtFinal() != null && b.getDtFinal().length() > 0) {
+        if (pagSearchDto.getDataFinal() != null && pagSearchDto.getDataFinal().toString().length() > 0) {
             pe.append(" até ");
-            pe.append(b.getDtFinal());
+            pe.append(pagSearchDto.getDataFinal());
         }
         if (pe.length() > 10) {
             XSSFRow row = sheet.createRow(r);
@@ -499,13 +504,4 @@ public class ExcelGeneratorService {
         styleAlinhado.setAlignment(HorizontalAlignment.JUSTIFY);
     }
 
-    private String valueGroup(String grupo, Object[] row) {
-        String value = null;
-        if (grupo.equalsIgnoreCase("Orgão")) {
-            value = row[0] + " - " + row[1];
-        } else if (grupo.equalsIgnoreCase("Credor")) {
-            value = row[3].toString();
-        }
-        return value;
-    }
 }
