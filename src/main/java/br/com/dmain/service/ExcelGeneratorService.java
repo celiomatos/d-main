@@ -413,7 +413,7 @@ public class ExcelGeneratorService {
     private void setStyleGroupOne(XSSFWorkbook wb) {
         styleGroupOne = wb.createCellStyle();
         styleGroupOne.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
-        styleGroupOne.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        styleGroupOne.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         styleGroupOne.setDataFormat((short) 7);
     }
 
@@ -423,7 +423,7 @@ public class ExcelGeneratorService {
     private void setStyleGroupTwo(XSSFWorkbook wb) {
         styleGroupTwo = wb.createCellStyle();
         styleGroupTwo.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
-        styleGroupTwo.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        styleGroupTwo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         styleGroupTwo.setDataFormat((short) 7);
     }
 
@@ -433,7 +433,7 @@ public class ExcelGeneratorService {
     private void setStyleGroupThree(XSSFWorkbook wb) {
         styleGroupThree = wb.createCellStyle();
         styleGroupThree.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
-        styleGroupThree.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        styleGroupThree.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         styleGroupThree.setDataFormat((short) 7);
     }
 
@@ -443,7 +443,7 @@ public class ExcelGeneratorService {
     private void setStyleGroupFour(XSSFWorkbook wb) {
         styleGroupFour = wb.createCellStyle();
         styleGroupFour.setFillForegroundColor(IndexedColors.GOLD.getIndex());
-        styleGroupFour.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        styleGroupFour.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         styleGroupFour.setDataFormat((short) 7);
     }
 
@@ -457,7 +457,7 @@ public class ExcelGeneratorService {
         styleHeader.setBorderLeft(BorderStyle.THIN);
         styleHeader.setBorderRight(BorderStyle.THIN);
         styleHeader.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-        styleHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        styleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
     }
 
     /**
@@ -466,7 +466,7 @@ public class ExcelGeneratorService {
     private void setStyleHeaderBlack(XSSFWorkbook wb) {
         styleHeaderBlack = wb.createCellStyle();
         styleHeaderBlack.setFillForegroundColor(IndexedColors.BLACK.getIndex());
-        styleHeaderBlack.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        styleHeaderBlack.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         XSSFFont font = wb.createFont();
         font.setColor(IndexedColors.WHITE.getIndex());
@@ -492,7 +492,7 @@ public class ExcelGeneratorService {
         styleDefaultOdd.setVerticalAlignment(VerticalAlignment.CENTER);
         styleDefaultOdd.setAlignment(HorizontalAlignment.JUSTIFY);
         styleDefaultOdd.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-        styleDefaultOdd.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        styleDefaultOdd.setFillPattern(FillPatternType.SOLID_FOREGROUND);
     }
 
     /**
