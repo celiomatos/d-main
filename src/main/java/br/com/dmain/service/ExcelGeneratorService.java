@@ -38,11 +38,12 @@ public class ExcelGeneratorService {
 
     public ByteArrayInputStream pagamentosToExcell(PagamentoSearchDto pagSearchDto) throws IOException {
 
+        pagSearchDto.setPage(0);
         Page<Pagamento> pagamentos = pagamentoService.findAll(pagSearchDto);
         if (pagamentos.getTotalElements() == 0 || pagamentos.getTotalElements() > 1000) {
             throw new IOException("");
         } else {
-            boolean isLast = false;
+            boolean isNotLast = true;
 
             try (XSSFWorkbook workbook = new XSSFWorkbook();
                  ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -141,7 +142,7 @@ public class ExcelGeneratorService {
 
                         if (!valueGroupTwo.equalsIgnoreCase(chaveGrupo2.toString())) {
                             odd = 1;
-                            if (i > 0) {
+                            if (count > 1) {
                                 cell = sheet.getRow(rowValorTwo).createCell(6);
                                 cell.setCellValue(totalG2);
                                 cell.setCellStyle(styleGroupTwo);
@@ -286,44 +287,44 @@ public class ExcelGeneratorService {
                         totalG2 += valor;
                         totalGeral += valor;
 
-                        if (count == pagamentos.getTotalElements()) {
-                            cell = sheet.getRow(rowValorOne).createCell(6);
-                            cell.setCellValue(totalG1);
-                            cell.setCellStyle(styleGroupOne);
-
-                            cell = sheet.getRow(rowValorTwo).createCell(6);
-                            cell.setCellValue(totalG2);
-                            cell.setCellStyle(styleGroupTwo);
-
-                            row = sheet.createRow(4);
-                            cell = row.createCell(0);
-                            cell.setCellValue("Total Geral");
-                            cell.setCellStyle(styleDefaultOdd);
-
-                            cell = row.createCell(1);
-                            cell.setCellValue(totalGeral);
-                            cell.setCellStyle(styleDefaultOdd);
-
-                            cell = row.createCell(2);
-                            cell.setCellStyle(styleDefaultOdd);
-                            sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, 4));
-
-                            row = sheet.createRow(0);
-                            cell = row.createCell(0);
-                            cell.setCellValue("Relação de pagamentos");
-
-                            createHead(pagSearchDto, sheet);
-                        }
-
-                        if (pagamentos.isLast()) {
-                            isLast = true;
-                        } else {
-                            pagSearchDto.setPage(pagSearchDto.getPage() + 1);
-                            pagamentos = pagamentoService.findAll(pagSearchDto);
-                        }
+                        count++;
                     }
-                    count++;
-                } while (isLast);
+
+                    if (pagamentos.isLast()) {
+                        isNotLast = false;
+
+                        cell = sheet.getRow(rowValorOne).createCell(6);
+                        cell.setCellValue(totalG1);
+                        cell.setCellStyle(styleGroupOne);
+
+                        cell = sheet.getRow(rowValorTwo).createCell(6);
+                        cell.setCellValue(totalG2);
+                        cell.setCellStyle(styleGroupTwo);
+
+                        row = sheet.createRow(4);
+                        cell = row.createCell(0);
+                        cell.setCellValue("Total Geral");
+                        cell.setCellStyle(styleDefaultOdd);
+
+                        cell = row.createCell(1);
+                        cell.setCellValue(totalGeral);
+                        cell.setCellStyle(styleDefaultOdd);
+
+                        cell = row.createCell(2);
+                        cell.setCellStyle(styleDefaultOdd);
+                        sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, 4));
+
+                        row = sheet.createRow(0);
+                        cell = row.createCell(0);
+                        cell.setCellValue("Relação de pagamentos");
+
+                        createHead(pagSearchDto, sheet);
+                    } else {
+                        pagSearchDto.setPage(pagSearchDto.getPage() + 1);
+                        pagamentos = pagamentoService.findAll(pagSearchDto);
+                    }
+
+                } while (isNotLast);
 
                 sheet.setColumnWidth(0, 2500);
                 sheet.setColumnWidth(1, 1700);

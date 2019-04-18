@@ -21,4 +21,9 @@ public class ClassificacaoService {
     public Page<Classificacao> findAll(Pageable pageable) {
         return classificacaoRepository.findAll(pageable);
     }
+
+    public Page<Classificacao> findByNome(String nome, Pageable pageable) {
+        nome = nome.trim().toUpperCase();
+        return classificacaoRepository.findByNomeContainingOrderByNomeAsc(nome, pageable);
+    }
 }

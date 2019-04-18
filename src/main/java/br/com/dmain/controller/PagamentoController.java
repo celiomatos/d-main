@@ -54,7 +54,6 @@ public class PagamentoController {
     @PostMapping("/pagamentos-to-excell")
     public void pagamentosToExcell(@ApiParam(value = "pagSearchDto", required = true)
                                        @RequestBody PagamentoSearchDto pagSearchDto) throws IOException {
-        System.out.println(">>>>>>>>>>><<<<<<<<<<<< :::: "+pagSearchDto.getOrgaos());
 
         InputStream myStream = excelGeneratorService.pagamentosToExcell(pagSearchDto);
 
