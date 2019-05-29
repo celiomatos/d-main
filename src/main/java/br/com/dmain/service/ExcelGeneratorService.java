@@ -39,6 +39,7 @@ public class ExcelGeneratorService {
     public ByteArrayInputStream pagamentosToExcell(PagamentoSearchDto pagSearchDto) throws IOException {
 
         pagSearchDto.setPage(0);
+        pagSearchDto.setSize(1001);
         Page<Pagamento> pagamentos = pagamentoService.findAll(pagSearchDto);
         if (pagamentos.getTotalElements() == 0 || pagamentos.getTotalElements() > 1000) {
             throw new IOException("");

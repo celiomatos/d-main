@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClassificacaoRepository extends JpaRepository<Classificacao, Long> {
 
-    Page<Classificacao> findByNomeContainingOrderByNomeAsc(String nome, Pageable pageable);
+    Page<Classificacao> findByNomeIgnoreCaseContainingOrderByNomeAsc(String nome, Pageable pageable);
 }

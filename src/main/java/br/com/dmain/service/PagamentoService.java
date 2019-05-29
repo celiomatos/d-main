@@ -39,7 +39,7 @@ public class PagamentoService {
      */
     public Page<Pagamento> findAll(PagamentoSearchDto pagSearchDto) {
 
-        Sort sort = new Sort(Sort.Direction.ASC, "orgao", "credor", "data");
+        Sort sort = new Sort(Sort.Direction.ASC, "orgao.nome", "credor.nome", "data");
         Pageable pageable = PageRequest.of(pagSearchDto.getPage(), pagSearchDto.getSize(), sort);
 
         Specification<Pagamento> spec = (root, query, builder) -> builder.equal(root.get("removido"), Boolean.FALSE);

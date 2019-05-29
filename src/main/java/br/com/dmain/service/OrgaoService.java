@@ -52,7 +52,6 @@ public class OrgaoService {
      * @return
      */
     public Page<Orgao> findByNome(String nome, Pageable pageable) {
-        nome = nome.trim().toUpperCase();
-        return orgaoRepository.findByNomeContainingOrderByNomeAsc(nome, pageable);
+        return orgaoRepository.findByNomeIgnoreCaseContainingOrderByNomeAsc(nome.trim(), pageable);
     }
 }
