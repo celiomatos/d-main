@@ -45,7 +45,7 @@ public class PagamentoController {
     }
 
     @ApiOperation(value = "five years")
-    @GetMapping("/five-years-pagamento")
+    @GetMapping("/five-years")
     public List<FiveYearsDto> fiveYearsPagagmentos() {
         return pagamentoService.fiveYearsPagagmentos();
     }

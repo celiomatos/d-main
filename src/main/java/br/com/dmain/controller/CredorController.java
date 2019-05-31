@@ -18,7 +18,7 @@ public class CredorController {
     @Autowired
     private CredorService credorService;
 
-    @GetMapping("/top-five-credores")
+    @GetMapping("/top-five")
     public List<TopFiveCredoresDto> topFiveCredores(@RequestParam String dateInicial, @RequestParam String dateFinal) {
         return credorService.topFive(dateInicial, dateFinal);
     }
