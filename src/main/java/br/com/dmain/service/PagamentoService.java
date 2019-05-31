@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -144,7 +145,9 @@ public class PagamentoService {
      * @return five years.
      */
     public List<FiveYearsDto> fiveYearsPagagmentos() {
-        List<Object[]> result = pagamentoRepository.findFiveYearsPagagmentos(new java.sql.Date(1546214400000L));
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 5);
+        List<Object[]> result = pagamentoRepository.findFiveYearsPagagmentos(new java.sql.Date(cal.getTimeInMillis()));
         List<FiveYearsDto> fiveYears = new ArrayList<>();
         for (Object[] obj : result) {
             fiveYears.add(new FiveYearsDto(obj[0].toString(), new BigDecimal(obj[1].toString())));
