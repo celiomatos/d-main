@@ -144,13 +144,13 @@ public class PagamentoService {
     /**
      * @return five years.
      */
-    public List<FiveYearsDto> fiveYearsPagagmentos() {
+    public List<FiveYearsDto> fiveYearsPagamentos() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 5);
         List<Object[]> result = pagamentoRepository.findFiveYearsPagagmentos(new java.sql.Date(cal.getTimeInMillis()));
         List<FiveYearsDto> fiveYears = new ArrayList<>();
         for (Object[] obj : result) {
-            fiveYears.add(new FiveYearsDto(obj[0].toString(), new BigDecimal(obj[1].toString())));
+            fiveYears.add(new FiveYearsDto(obj[0].toString().substring(0,4), new BigDecimal(obj[1].toString())));
         }
         return fiveYears;
     }
