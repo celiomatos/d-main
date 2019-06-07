@@ -20,5 +20,5 @@ public interface OrgaoRepository extends JpaRepository<Orgao, Long> {
             "GROUP BY sigla, orgao ORDER BY valor DESC LIMIT 5", nativeQuery = true)
     List<Object[]> findTopFiveOrgaos(java.sql.Date dateInicial, java.sql.Date dateFinal);
 
-    Page<Orgao> findByNomeContainingOrderByNomeAsc(String nome, Pageable pageable);
+    Page<Orgao> findByNomeIgnoreCaseContainingOrderByNomeAsc(String nome, Pageable pageable);
 }

@@ -39,7 +39,7 @@ public class PagamentoService {
      */
     public Page<Pagamento> findAll(PagamentoSearchDto pagSearchDto) {
 
-        Sort sort = new Sort(Sort.Direction.ASC, "orgao", "credor.nome", "data");
+        Sort sort = new Sort(Sort.Direction.ASC, "orgao", "credor", "data");
         Pageable pageable = PageRequest.of(pagSearchDto.getPage(), pagSearchDto.getSize(), sort);
 
         Specification<Pagamento> spec = (root, query, builder) -> builder.equal(root.get("removido"), Boolean.FALSE);
@@ -143,7 +143,7 @@ public class PagamentoService {
     /**
      * @return five years.
      */
-    public List<FiveYearsDto> fiveYearsPagamentos() {
+    public List<FiveYearsDto> fiveYearsPagagmentos() {
         List<Object[]> result = pagamentoRepository.findFiveYearsPagagmentos(new java.sql.Date(1546214400000L));
         List<FiveYearsDto> fiveYears = new ArrayList<>();
         for (Object[] obj : result) {

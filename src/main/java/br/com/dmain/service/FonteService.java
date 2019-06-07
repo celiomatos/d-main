@@ -22,4 +22,8 @@ public class FonteService {
     public Page<Fonte> findAll(Pageable pageable) {
         return fonteRepository.findAll(pageable);
     }
+
+    public Page<Fonte> findByNome(String nome, Pageable pageable) {
+        return fonteRepository.findByNomeIgnoreCaseContainingOrderByNomeAsc(nome.trim(), pageable);
+    }
 }

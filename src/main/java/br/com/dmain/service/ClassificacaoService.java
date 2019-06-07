@@ -23,7 +23,6 @@ public class ClassificacaoService {
     }
 
     public Page<Classificacao> findByNome(String nome, Pageable pageable) {
-        nome = nome.trim().toUpperCase();
-        return classificacaoRepository.findByNomeContainingOrderByNomeAsc(nome, pageable);
+        return classificacaoRepository.findByNomeIgnoreCaseContainingOrderByNomeAsc(nome.trim(), pageable);
     }
 }
