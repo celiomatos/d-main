@@ -94,7 +94,8 @@ public class ExcelGeneratorService {
 
                         boolean isCreateRow = false;
 
-                        String chaveGrupo1 = pagamento.get(i).getOrgao().getCodigo() + " - " + pagamento.get(i).getOrgao().getNome();
+                        String chaveGrupo1 = pagamento.get(i).getOrgao().getCodigo()
+                                + " - " + pagamento.get(i).getOrgao().getNome();
 
                         if (!valueGroupOne.equalsIgnoreCase(chaveGrupo1)) {
 
@@ -164,7 +165,7 @@ public class ExcelGeneratorService {
                             cell.setCellStyle(styleGroupTwo);
 
                             cell = row.createCell(cellAtual++);
-                            cell.setCellValue(valueGroupTwoAux);
+                            cell.setCellValue(valueGroupTwoAux + " (id: "+pagamento.get(i).getCredor().getId()+")");
                             cell.setCellStyle(styleGroupTwo);
                             cell = row.createCell(cellAtual++);
                             cell.setCellStyle(styleGroupTwo);
