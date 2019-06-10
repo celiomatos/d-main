@@ -5,9 +5,6 @@ import br.com.dmain.dto.PagamentoSearchDto;
 import br.com.dmain.model.Pagamento;
 import br.com.dmain.service.ExcelGeneratorService;
 import br.com.dmain.service.PagamentoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +17,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Api(value = "d main")
 @RestController
 @RequestMapping("/pagamentos")
 public class PagamentoController {
@@ -44,16 +40,13 @@ public class PagamentoController {
         return pagamentoService.sumPagamentoValor(pagSearchDto);
     }
 
-    @ApiOperation(value = "five years")
     @GetMapping("/five-years")
     public List<FiveYearsDto> fiveYearsPagagmentos() {
         return pagamentoService.fiveYearsPagamentos();
     }
 
-    @ApiOperation(value = "excel")
     @PostMapping("/pagamentos-to-excell")
-    public void pagamentosToExcell(@ApiParam(value = "pagSearchDto", required = true)
-                                       @RequestBody PagamentoSearchDto pagSearchDto) throws IOException {
+    public void pagamentosToExcell(@RequestBody PagamentoSearchDto pagSearchDto) throws IOException {
 
         InputStream myStream = excelGeneratorService.pagamentosToExcell(pagSearchDto);
 
