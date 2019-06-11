@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -47,7 +48,6 @@ public class PagamentoController {
 
     @PostMapping("/pagamentos-to-excell")
     public void pagamentosToExcell(@RequestBody PagamentoSearchDto pagSearchDto) throws IOException {
-
         InputStream myStream = excelGeneratorService.pagamentosToExcell(pagSearchDto);
 
         // xls file
@@ -58,5 +58,4 @@ public class PagamentoController {
         IOUtils.copy(myStream, response.getOutputStream());
         response.flushBuffer();
     }
-
 }
