@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -47,15 +46,8 @@ public class PagamentoController {
     }
 
     @PostMapping("/pagamentos-to-excell")
-    public void pagamentosToExcell(@RequestBody PagamentoSearchDto pagSearchDto) throws IOException {
+    public byte[] pagamentosToExcell(@RequestBody PagamentoSearchDto pagSearchDto) throws IOException {
         InputStream myStream = excelGeneratorService.pagamentosToExcell(pagSearchDto);
-
-        // xls file
-        response.addHeader("Content-disposition", "attachment;filename=sample.xlsx");
-        response.setContentType("application/vnd.ms-excel");
-
-        // Copy the stream to the response's output stream.
-        IOUtils.copy(myStream, response.getOutputStream());
-        response.flushBuffer();
+        return IOUtils.toByteArray(myStream);
     }
 }
