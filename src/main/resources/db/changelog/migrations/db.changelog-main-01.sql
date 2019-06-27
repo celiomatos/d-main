@@ -26,23 +26,23 @@ create table if not exists  main.pessoa
   pes_apelido character varying(100) not null,
   pes_nome_pesquisa character varying(100) not null,
   pes_cpf character varying(14),
-  pes_naturalidade character varying(14),
-  pes_nacionalidade character varying(14),
+  pes_naturalidade character varying(45),
+  pes_nacionalidade character varying(45),
   pes_estado_civil smallint,
   pes_escolaridade smallint,
-  pes_profissao character varying(14),
+  pes_profissao character varying(100),
   pes_nascimento date,
   pes_cadastro timestamp without time zone not null default now(),
-  pes_email character varying(14),
-  pes_celular character varying(14),
+  pes_email character varying(45),
+  pes_celular character varying(15),
   pes_cep character varying(9),
   pes_uf character varying(2),
   pes_municipio character varying(45),
   pes_bairro character varying(45),
   pes_logradouro character varying(45),
   pes_numero character varying(15),  
-  pes_grupo character varying(14),
-  pes_cargo character varying(14)
+  pes_grupo character varying(100),
+  pes_cargo character varying(60)
 );
 
 --rollback drop table main.pessoa;

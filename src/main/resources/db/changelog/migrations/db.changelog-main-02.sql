@@ -6,7 +6,7 @@ create table if not exists main.destinatario
 (
   des_id bigserial primary key,
   des_grupo character varying(15) not null,
-  des_mail character varying(100) not null,
+  des_mail character varying(45) not null,
   unique (des_grupo, des_mail)
 );
 
