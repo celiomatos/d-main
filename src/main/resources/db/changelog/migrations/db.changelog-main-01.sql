@@ -1,10 +1,5 @@
 --liquibase formatted sql
 
---changeset celio:main-001
-create schema if not exists main;
-
---rollback drop schema main;
-
 --changeset celio:main-002
 
 create table if not exists main.grupo
